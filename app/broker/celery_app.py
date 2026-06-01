@@ -1,5 +1,4 @@
 from celery import Celery
-from celery.schedules import crontab
 
 from app.configuration.config import settings
 
@@ -17,13 +16,11 @@ celery_app.conf.update(
     result_serializer="json",
     timezone="UTC",
     enable_utc=True,
-
     # Поведение задач
     task_track_started=True,
     task_acks_late=True,
     worker_prefetch_multiplier=1,
     task_reject_on_worker_lost=True,
-
     # Маршрутизация
     task_default_queue="default",
     task_routes={
@@ -31,10 +28,8 @@ celery_app.conf.update(
         "app.broker.tasks.enrich_batch_task": {"queue": "enrichment"},
         "app.broker.tasks.scan_pending_news_task": {"queue": "default"},
     },
-
     # Протухание результатов
     result_expires=86400,  # 24 часа
-
     # Расписание Beat — сканирование ожидающих новостей каждые N секунд
     beat_schedule={
         "scan-pending-news": {

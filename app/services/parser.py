@@ -8,6 +8,7 @@ from app.services.base_parser import BaseParser, EnrichedData
 
 logger = logging.getLogger(__name__)
 
+
 class RiaParser(BaseParser):
     """Парсер для сайта РИА Новости"""
 

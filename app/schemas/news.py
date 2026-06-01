@@ -29,11 +29,12 @@ class NewsBase(BaseModel):
 
 class NewsResponse(NewsBase):
     model_config = ConfigDict(from_attributes=True)
- 
+
     id: uuid.UUID
     created_at: datetime
     updated_at: datetime
     enrichment: EnrichmentSchema | None = None
+
 
 class NewsListResponse(BaseModel):
     items: list[NewsResponse]
@@ -41,4 +42,3 @@ class NewsListResponse(BaseModel):
     page: int
     size: int
     pages: int
-

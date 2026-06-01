@@ -1,14 +1,14 @@
-
-# from __future__ import annotations
-
 import asyncio
 import logging
 import random
-from urllib.parse import urlparse
 
 import httpx
-from tenacity import (retry, retry_if_exception_type, stop_after_attempt,
-                      wait_exponential)
+from tenacity import (
+    retry,
+    retry_if_exception_type,
+    stop_after_attempt,
+    wait_exponential,
+)
 
 from app.configuration.config import settings
 from app.core.exceptions import FetchError
@@ -61,9 +61,7 @@ class Fetcher:
             response = await client.get(url)
             response.raise_for_status()
         except httpx.HTTPStatusError as exc:
-            raise FetchError(
-                f"HTTP {exc.response.status_code} for {url}"
-            ) from exc
+            raise FetchError(f"HTTP {exc.response.status_code} for {url}") from exc
         except (httpx.TransportError, httpx.TimeoutException) as exc:
             logger.warning("Fetch error for %s: %s", url, exc)
             raise
@@ -88,4 +86,3 @@ def get_fetcher() -> Fetcher:
     if _fetcher is None:
         _fetcher = Fetcher()
     return _fetcher
-    

@@ -71,7 +71,9 @@ async def _enrich_single(task, news_id: uuid.UUID) -> dict:
             )
             await session.commit()
 
-            logger.info("Обогащена новость news_id=%s парсером=%s", news_id, parser_used)
+            logger.info(
+                "Обогащена новость news_id=%s парсером=%s", news_id, parser_used
+            )
             return {"news_id": str(news_id), "status": "done", "parser": parser_used}
 
         except EnrichmentError as exc:

@@ -8,10 +8,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 import uuid
 from datetime import datetime, timedelta
 
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.configuration.database import AsyncSessionFactory
-from app.models.news import News, NewsEnrichment
+from app.models.news import News
 
 SAMPLE_NEWS = [
     {

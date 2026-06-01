@@ -11,4 +11,3 @@ async def get_news_service(
     session: AsyncSession = Depends(get_db_session),
 ) -> AsyncGenerator[NewsService, None]:
     yield NewsService(session)
- 

@@ -53,6 +53,9 @@ services:
       target: production
     command: celery -A app.broker.celery_app worker --loglevel=info --concurrency=4 -Q enrichment,default
     env_file: .env
+    environment:
+      POSTGRES_HOST: postgres
+      REDIS_HOST: redis
     depends_on:
       postgres:
         condition: service_healthy

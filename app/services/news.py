@@ -87,14 +87,6 @@ class NewsService:
                 NewsEnrichment.author.ilike(f"%{params.author}%")
             )
  
-        if params.has_video is not None:
-            stmt = stmt.where(
-                NewsEnrichment.metadata["has_video"].astext.cast(
-                    type_=__import__("sqlalchemy").Boolean
-                )
-                == params.has_video
-            )
- 
         # Считаем общее количество новостей
         total = (await self.session.execute(count_stmt)).scalar_one()
  

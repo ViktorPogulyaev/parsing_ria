@@ -61,6 +61,27 @@ class Settings(BaseSettings):
     enrichment_retry_delay_max: int = Field(default=30, validation_alias="ENRICHMENT_RETRY_DELAY_MAX")
     enrichment_retry_delay_multiplier: float = Field(default=2, validation_alias="ENRICHMENT_RETRY_DELAY_MULTIPLIER")
     enrichment_retry_delay_max_value: int = Field(default=60, validation_alias="ENRICHMENT_RETRY_DELAY_MAX_VALUE")
+    enrichment_schedule_interval: int = Field(
+        default=300,
+        validation_alias="ENRICHMENT_SCHEDULE_INTERVAL",
+    )
+    enrichment_batch_size: int = Field(default=50, validation_alias="ENRICHMENT_BATCH_SIZE")
 
+    # Celery
+    celery_broker_url: str = Field(
+        default="redis://localhost:6379/0",
+        validation_alias="CELERY_BROKER_URL",
+    )
+    celery_result_backend: str = Field(
+        default="redis://localhost:6379/0",
+        validation_alias="CELERY_RESULT_BACKEND",
+    )
+    celery_task_serializer: str = Field(default="json", validation_alias="CELERY_TASK_SERIALIZER")
+    celery_result_serializer: str = Field(default="json", validation_alias="CELERY_RESULT_SERIALIZER")
+    celery_accept_content: str = Field(default="json", validation_alias="CELERY_ACCEPT_CONTENT")
+    celery_timezone: str = Field(default="UTC", validation_alias="CELERY_TIMEZONE")
+    celery_enable_utc: bool = Field(default=True, validation_alias="CELERY_ENABLE_UTC")
+    celery_task_track_started: bool = Field(default=True, validation_alias="CELERY_TASK_TRACK_STARTED")
+    celery_task_acks_late: bool = Field(default=True, validation_alias="CELERY_TASK_ACKS_LATE")
 
 settings = Settings()

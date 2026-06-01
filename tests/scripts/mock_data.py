@@ -45,21 +45,12 @@ async def seed() -> None:
     async with AsyncSessionFactory() as session:
         created = 0
         for item in SAMPLE_NEWS:
-            enrichment_data = item.pop("enrichment_data", {})
-            status = item.pop("status")
-
             news = News(id=uuid.uuid4(), **item)
-            enrichment = NewsEnrichment(
-                news_id=news.id,
-                status=status,
-                **enrichment_data,
-            )
             session.add(news)
-            session.add(enrichment)
             created += 1
 
         await session.commit()
-        print(f"✓ Seeded {created} news records")
+        print(f"✓ Mocked {created} news records in database")
 
 
 if __name__ == "__main__":

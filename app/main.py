@@ -42,7 +42,10 @@ def create_app() -> FastAPI:
             content={"detail": "Internal server error"},
         )
 
-    # Routers
+    @app.get("/health", tags=["health"])
+    async def health() -> dict[str, str]:
+        return {"status": "ok"}
+
     app.include_router(news_router, prefix="/api/v1")
     app.include_router(enrichment_router, prefix="/api/v1")
 

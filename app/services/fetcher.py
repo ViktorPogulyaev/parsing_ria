@@ -38,7 +38,6 @@ class Fetcher:
                 headers=HEADERS,
                 timeout=httpx.Timeout(settings.enrichment_request_timeout),
                 follow_redirects=True,
-                http2=True,
                 limits=httpx.Limits(max_connections=20, max_keepalive_connections=10),
             )
         return self._client

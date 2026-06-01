@@ -17,12 +17,16 @@ logger = logging.getLogger(__name__)
 
 
 def _run_async(coro):
-    """Запуск асинхронной корутины из синхронной задачи Celery."""
-    loop = asyncio.new_event_loop()
-    try:
-        return loop.run_until_complete(coro)
-    finally:
-        loop.close()
+    """Запуск async-кода из Celery: новый event loop на задачу + сброс пула БД."""
+    from app.configuration.database import engine
+
+    async def runner():
+        try:
+            return await coro
+        finally:
+            await engine.dispose()
+
+    return asyncio.run(runner())
 
 
 @celery_app.task(

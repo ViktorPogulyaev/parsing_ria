@@ -2,15 +2,16 @@ import asyncio
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).parent.parent))
+# Добавляем путь к корневому каталогу проекта для корректного запуска скрипта
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 import uuid
 from datetime import datetime, timedelta
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from configuration.database import AsyncSessionFactory
-from models.news import News, NewsEnrichment, NewsEnrichmentStatus
+from app.configuration.database import AsyncSessionFactory
+from app.models.news import News, NewsEnrichment
 
 SAMPLE_NEWS = [
     {

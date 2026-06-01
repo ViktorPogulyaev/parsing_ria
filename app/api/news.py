@@ -3,9 +3,9 @@ import uuid
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 
-from api.depencies import get_news_service
-from schemas.news import NewsFilterParams, NewsListResponse, NewsResponse
-from services.news import NewsService
+from app.api.depencies import get_news_service
+from app.schemas.news import NewsFilterParams, NewsListResponse, NewsResponse
+from app.services.news import NewsService
 
 router = APIRouter(prefix="/news", tags=["news"])
  

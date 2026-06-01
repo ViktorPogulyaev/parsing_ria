@@ -14,11 +14,11 @@
 import logging
 from urllib.parse import urlparse
 
-from core.exceptions import EnrichmentError, FetchError, ParserError
-from models.news import News
-from services.base_parser import BaseParser, EnrichedData
-from services.fetcher import get_fetcher
-from services.parser import get_parser_for_domain
+from app.core.exceptions import EnrichmentError, FetchError, ParserError
+from app.models.news import News
+from app.services.base_parser import BaseParser, EnrichedData
+from app.services.fetcher import get_fetcher
+from app.services.parser import get_parser_for_domain
 
 logger = logging.getLogger(__name__)
 

@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import Any
 
-from core.utils import safe_int
+from app.core.utils import safe_int
 
 
 @dataclass

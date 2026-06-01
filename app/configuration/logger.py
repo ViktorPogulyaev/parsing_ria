@@ -1,7 +1,7 @@
 import logging
 import sys
 
-from configuration.config import settings
+from app.configuration.config import settings
 
 
 def setup_logging() -> None:

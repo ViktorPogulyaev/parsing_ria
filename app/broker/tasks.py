@@ -4,12 +4,12 @@ import uuid
 
 from celery import group
 
-from configuration.config import settings
-from configuration.database import AsyncSessionFactory
-from core.exceptions import EnrichmentError, FetchError
-from models.news import EnrichmentStatus
-from services.news import NewsService
-from services.parsing_composer import EnrichmentComposer
+from app.configuration.config import settings
+from app.configuration.database import AsyncSessionFactory
+from app.core.exceptions import EnrichmentError, FetchError
+from app.models.news import NewsEnrichmentStatus
+from app.services.news import NewsService
+from app.services.parsing_composer import EnrichmentComposer
 
 from .celery_app import celery_app
 
@@ -27,7 +27,7 @@ def _run_async(coro):
 
 @celery_app.task(
     bind=True,
-    name="app.workers.tasks.enrich_news_task",
+    name="app.broker.tasks.enrich_news_task",
     max_retries=settings.enrichment_max_retries,
     default_retry_delay=settings.enrichment_retry_delay,
     autoretry_for=(FetchError,),
@@ -50,7 +50,7 @@ async def _enrich_single(task, news_id: uuid.UUID) -> dict:
         await service.update_enrichment(
             news_id,
             enriched_data={},
-            status=EnrichmentStatus.IN_PROGRESS,
+            status=NewsEnrichmentStatus.IN_PROGRESS,
         )
         await session.commit()
 
@@ -62,7 +62,7 @@ async def _enrich_single(task, news_id: uuid.UUID) -> dict:
             await service.update_enrichment(
                 news_id,
                 enriched_data=enriched.to_dict(),
-                status=EnrichmentStatus.DONE,
+                status=NewsEnrichmentStatus.DONE,
                 parser_used=parser_used,
             )
             await session.commit()
@@ -75,7 +75,7 @@ async def _enrich_single(task, news_id: uuid.UUID) -> dict:
             await service.update_enrichment(
                 news_id,
                 enriched_data={},
-                status=EnrichmentStatus.FAILED,
+                status=NewsEnrichmentStatus.FAILED,
                 error_message=str(exc),
             )
             await session.commit()
@@ -87,7 +87,7 @@ async def _enrich_single(task, news_id: uuid.UUID) -> dict:
             await service.update_enrichment(
                 news_id,
                 enriched_data={},
-                status=EnrichmentStatus.FAILED,
+                status=NewsEnrichmentStatus.FAILED,
                 error_message=str(exc),
             )
             await session.commit()
@@ -95,7 +95,7 @@ async def _enrich_single(task, news_id: uuid.UUID) -> dict:
 
 
 @celery_app.task(
-    name="app.workers.tasks.enrich_batch_task",
+    name="app.broker.tasks.enrich_batch_task",
     soft_time_limit=600,
     time_limit=700,
 )
@@ -107,7 +107,7 @@ def enrich_batch_task(news_ids: list[str]) -> dict:
     return {"dispatched": len(news_ids), "group_id": result.id}
 
 
-# @celery_app.task(name="app.workers.tasks.scan_pending_news_task")
+# @celery_app.task(name="app.broker.tasks.scan_pending_news_task")
 # def scan_pending_news_task() -> dict:
 #     """Периодическая задача: найти ожидающие новости и обогатить их."""
 #     return _run_async(_scan_pending())

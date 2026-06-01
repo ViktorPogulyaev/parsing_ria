@@ -1,19 +1,24 @@
+from __future__ import annotations
+
 import logging
+import re
 
-import newspaper
+from bs4 import BeautifulSoup
 
-from core.exceptions import ParserError
-from services.base_parser import BaseParser, EnrichedData
+from app.core.exceptions import ParserError
+from app.services.base_parser import BaseParser, EnrichedData
 
 logger = logging.getLogger(__name__)
 
 
 # class Newspaper3kParser(BaseParser):
 #     """Использование heuristics newspaper3k — должен работать на большинстве сайтов новостей."""
-
+#
 #     name = "newspaper3k"
-
+#
 #     async def parse(self, url: str, html: str) -> EnrichedData:
+#         import newspaper
+#
 #         try:
 #             article = newspaper.Article(url, language="ru")
 #             article.set_html(html)
@@ -21,7 +26,7 @@ logger = logging.getLogger(__name__)
 #             article.nlp()
 #         except Exception as exc:
 #             raise ParserError(f"newspaper3k failed: {exc}") from exc
-
+#
 #         data = EnrichedData(
 #             full_text=self.clean_text(article.text),
 #             author=", ".join(article.authors) if article.authors else None,
@@ -29,36 +34,16 @@ logger = logging.getLogger(__name__)
 #             keywords=list(article.keywords or []),
 #             summary=self.clean_text(article.summary),
 #         )
-
+#
 #         if article.top_img:
 #             data.images = [{"url": article.top_img, "caption": None}]
-
+#
 #         return data
-
-
-# class ReserveParser(BaseParser):
-#     """Резервный парсер"""
-#     def parse(self, url: str, html: str) -> EnrichedData:
-#         raise ParserError("Резервный парсер не реализован")
-
-
-
-from __future__ import annotations
-
-import logging
-import re
-from urllib.parse import urljoin
-
-from bs4 import BeautifulSoup
-
-from core.exceptions import ParserError
-from services.base_parser import BaseParser, EnrichedData
-
-logger = logging.getLogger(__name__)
 
 
 class RiaParser(BaseParser):
     """Парсер для сайта РИА Новости"""
+
     name = "ria"
     domains = {"ria.ru", "www.ria.ru"}
 
@@ -68,37 +53,30 @@ class RiaParser(BaseParser):
         except Exception as exc:
             raise ParserError(str(exc)) from exc
 
-        # Тело статьи
         body = soup.select_one(".article__body, .article__text")
         if not body:
             raise ParserError("RiaParser: article body not found")
 
-        # Удаление рекламных блоков и ненужных тегов
         for tag in body.select(".article__announce, .article__quote-author, script"):
             tag.decompose()
 
         full_text = self.clean_text(body.get_text(separator=" "))
 
-        # Автор
         author_tag = soup.select_one(".article__author-name, .article__info-author a")
         author = self.clean_text(author_tag.get_text()) if author_tag else None
 
-        # Главное изображение
         img_tag = soup.select_one(".photoview__open img, .article__announce-img img")
         main_image = img_tag.get("src") if img_tag else None
 
-        # Теги
         tags = [
             self.clean_text(t.get_text())
             for t in soup.select(".article__tags a")
             if t.get_text().strip()
         ]
 
-        # Просмотры / комментарии
         views = _parse_count(soup, ".statistic__item--views .statistic__value")
         comments = _parse_count(soup, ".statistic__item--comments .statistic__value")
 
-        # Категории
         categories = [
             self.clean_text(c.get_text())
             for c in soup.select(".breadcrumb__item a")
@@ -118,8 +96,9 @@ class RiaParser(BaseParser):
             comments_count=comments,
         )
 
+
 SITE_PARSERS: list[BaseParser] = [
-    RiaParser()
+    RiaParser(),
 ]
 
 
@@ -139,4 +118,3 @@ def _parse_count(soup: BeautifulSoup, selector: str) -> int | None:
     text = tag.get_text(strip=True).replace("\xa0", "").replace(" ", "")
     match = re.search(r"\d+", text)
     return int(match.group()) if match else None
-    

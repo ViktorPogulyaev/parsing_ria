@@ -10,8 +10,8 @@ import httpx
 from tenacity import (retry, retry_if_exception_type, stop_after_attempt,
                       wait_exponential)
 
-from configuration.config import settings
-from core.exceptions import FetchError
+from app.configuration.config import settings
+from app.core.exceptions import FetchError
 
 logger = logging.getLogger(__name__)
 

@@ -7,9 +7,9 @@ from sqlalchemy import func, or_, select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from core.exceptions import NotFoundError
-from models.news import News, NewsEnrichment, NewsEnrichmentStatus
-from schemas.news import NewsFilterParams
+from app.core.exceptions import NotFoundError
+from app.models.news import News, NewsEnrichment, NewsEnrichmentStatus
+from app.schemas.news import NewsFilterParams
 
 logger = logging.getLogger(__name__)
  

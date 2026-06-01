@@ -1,13 +1,13 @@
 from celery import Celery
 from celery.schedules import crontab
 
-from configuration.config import settings
+from app.configuration.config import settings
 
 celery_app = Celery(
     "news_enrichment",
     broker=settings.celery_broker_url,
     backend=settings.celery_result_backend,
-    include=["app.workers.tasks"],
+    include=["app.broker.tasks"],
 )
 
 celery_app.conf.update(
@@ -27,9 +27,9 @@ celery_app.conf.update(
     # Маршрутизация
     task_default_queue="default",
     task_routes={
-        "app.workers.tasks.enrich_news_task": {"queue": "enrichment"},
-        "app.workers.tasks.enrich_batch_task": {"queue": "enrichment"},
-        "app.workers.tasks.scan_pending_news_task": {"queue": "default"},
+        "app.broker.tasks.enrich_news_task": {"queue": "enrichment"},
+        "app.broker.tasks.enrich_batch_task": {"queue": "enrichment"},
+        "app.broker.tasks.scan_pending_news_task": {"queue": "default"},
     },
 
     # Протухание результатов
@@ -38,7 +38,7 @@ celery_app.conf.update(
     # Расписание Beat — сканирование ожидающих новостей каждые N секунд
     beat_schedule={
         "scan-pending-news": {
-            "task": "app.workers.tasks.scan_pending_news_task",
+            "task": "app.broker.tasks.scan_pending_news_task",
             "schedule": settings.enrichment_schedule_interval,
         },
     },

@@ -8,7 +8,7 @@ from sqlalchemy import (DateTime, ForeignKey, Index, Integer, String, Text,
 from sqlalchemy.dialects.postgresql import JSONB, TSVECTOR, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from configuration.database import Base
+from app.configuration.database import Base
 
 
 class NewsEnrichmentStatus(StrEnum):

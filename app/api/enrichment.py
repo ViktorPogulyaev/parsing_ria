@@ -3,14 +3,14 @@ import uuid
 
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from api.depencies import get_news_service
-from broker.tasks import enrich_batch_task, enrich_news_task
-from core.exceptions import NotFoundError
-from models.news import NewsEnrichmentStatus
-from schemas.news_enrichment import (EnrichBatchRequest,
-                                     EnrichByCriteriaRequest,
-                                     EnrichSingleRequest, EnrichTaskResponse)
-from services.news import NewsService
+from app.api.depencies import get_news_service
+from app.broker.tasks import enrich_batch_task, enrich_news_task
+from app.core.exceptions import NotFoundError
+from app.models.news import NewsEnrichmentStatus
+from app.schemas.news_enrichment import (EnrichBatchRequest,
+                                         EnrichByCriteriaRequest,
+                                         EnrichSingleRequest, EnrichTaskResponse)
+from app.services.news import NewsService
 
 router = APIRouter(prefix="/enrich", tags=["enrichment"])
 
@@ -68,7 +68,7 @@ async def enrich_by_criteria(
     payload: EnrichByCriteriaRequest,
     service: NewsService = Depends(get_news_service),
 ) -> EnrichTaskResponse:
-    from schemas.news import NewsFilterParams
+    from app.schemas.news import NewsFilterParams
 
     params = NewsFilterParams(
         size=payload.limit,

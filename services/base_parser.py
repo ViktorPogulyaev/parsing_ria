@@ -3,6 +3,8 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import Any
 
+from core.utils import safe_int
+
 
 @dataclass
 class EnrichedData:
@@ -77,15 +79,10 @@ class BaseParser(ABC):
                 {
                     "url": src,
                     "caption": img.get("alt") or img.get("title"),
-                    "width": _safe_int(img.get("width")),
-                    "height": _safe_int(img.get("height")),
+                    "width": safe_int(img.get("width")),
+                    "height": safe_int(img.get("height")),
                 }
             )
         return images
 
 
-def _safe_int(value: Any) -> int | None:
-    try:
-        return int(value)
-    except (TypeError, ValueError):
-        return None

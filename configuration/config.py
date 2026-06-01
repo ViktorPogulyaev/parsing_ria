@@ -50,5 +50,17 @@ class Settings(BaseSettings):
     )
     accept_content: str = Field(default="json", validation_alias="CELERY_ACCEPT_CONTENT")
 
+    # Enrichment
+    enrichment_user_agent: str = Field(
+        default="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        validation_alias="ENRICHMENT_USER_AGENT"
+    )
+    enrichment_request_timeout: int = Field(default=30, validation_alias="ENRICHMENT_REQUEST_TIMEOUT")
+    enrichment_max_retries: int = Field(default=3, validation_alias="ENRICHMENT_MAX_RETRIES")
+    enrichment_retry_delay: int = Field(default=1, validation_alias="ENRICHMENT_RETRY_DELAY")
+    enrichment_retry_delay_max: int = Field(default=30, validation_alias="ENRICHMENT_RETRY_DELAY_MAX")
+    enrichment_retry_delay_multiplier: float = Field(default=2, validation_alias="ENRICHMENT_RETRY_DELAY_MULTIPLIER")
+    enrichment_retry_delay_max_value: int = Field(default=60, validation_alias="ENRICHMENT_RETRY_DELAY_MAX_VALUE")
+
 
 settings = Settings()

@@ -109,29 +109,3 @@ def enrich_batch_task(news_ids: list[str]) -> dict:
     result = job.apply_async()
     logger.info("Отправлен обогащение для %d новостей", len(news_ids))
     return {"dispatched": len(news_ids), "group_id": result.id}
-
-
-# @celery_app.task(name="app.broker.tasks.scan_pending_news_task")
-# def scan_pending_news_task() -> dict:
-#     """Периодическая задача: найти ожидающие новости и обогатить их."""
-#     return _run_async(_scan_pending())
-
-
-# async def _scan_pending() -> dict:
-#     from app.core.database import AsyncSessionFactory
-#     from app.services.news_service import NewsService
-
-#     async with AsyncSessionFactory() as session:
-#         service = NewsService(session)
-#         pending = await service.get_pending_enrichment(
-#             limit=settings.enrichment_batch_size
-#         )
-
-#     if not pending:
-#         logger.debug("scan_pending: no pending news found")
-#         return {"dispatched": 0}
-
-#     news_ids = [str(n.id) for n in pending]
-#     enrich_batch_task.delay(news_ids)
-#     logger.info("scan_pending: dispatched %d items", len(news_ids))
-#     return {"dispatched": len(news_ids)}

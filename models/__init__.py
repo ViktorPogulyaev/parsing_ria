@@ -1,3 +1,3 @@
-from models.news_models import News, NewsExtention
+from models.news import News, NewsEnrichment
 
-__all__ = ["News", "NewsExtention", "NewsExtentionStatus"]
+__all__ = ["News", "NewsEnrichment", "NewsEnrichmentStatus"]

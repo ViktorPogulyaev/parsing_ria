@@ -9,3 +9,11 @@ class FetchError(Exception):
 class ParserError(Exception):
     """Исключение для случаев, когда возникает ошибка при парсинге данных"""
     pass
+
+class OutOfParsers(Exception):
+    """Исключение для случаев, когда все парсеры проверены и ни один из них не смог обработать данные"""
+    pass
+
+class EnrichmentError(Exception):
+    """Исключение для случаев, когда возникает ошибка при обогащении данных"""
+    pass

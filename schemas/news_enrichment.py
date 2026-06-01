@@ -12,7 +12,7 @@ class ImageSchema(BaseModel):
     height: int | None = None
 
 
-class EnrichmentSingleRequest(BaseModel):
+class EnrichSingleRequest(BaseModel):
     news_id: uuid.UUID
 
 
@@ -20,7 +20,7 @@ class EnrichBatchRequest(BaseModel):
     news_ids: list[uuid.UUID] = Field(..., min_length=1)
 
 
-class EnrichmentTaskResponse(BaseModel):
+class EnrichTaskResponse(BaseModel):
     task_id: str
     news_id: uuid.UUID | None = None
     count: int | None = None

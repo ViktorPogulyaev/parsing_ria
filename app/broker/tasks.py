@@ -109,5 +109,5 @@ def enrich_batch_task(news_ids: list[str]) -> dict:
     """Обогащение списка новостей параллельно."""
     job = group(enrich_news_task.s(nid) for nid in news_ids)
     result = job.apply_async()
-    logger.info("Отправлен обогащение для %d новостей", len(news_ids))
+    logger.info("Отправлены на обогащение %d новостей", len(news_ids))
     return {"dispatched": len(news_ids), "group_id": result.id}

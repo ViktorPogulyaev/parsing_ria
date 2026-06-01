@@ -5,12 +5,13 @@ import uuid
 from celery import group
 
 from configuration.config import settings
+from configuration.database import AsyncSessionFactory
 from core.exceptions import EnrichmentError, FetchError
 from models.news import EnrichmentStatus
-from .celery_app import celery_app
-from configuration.database import AsyncSessionFactory
-from services.parsing_composer import EnrichmentComposer
 from services.news import NewsService
+from services.parsing_composer import EnrichmentComposer
+
+from .celery_app import celery_app
 
 logger = logging.getLogger(__name__)
 

@@ -18,7 +18,6 @@ from core.exceptions import EnrichmentError, FetchError, ParserError
 from models.news import News
 from services.base_parser import BaseParser, EnrichedData
 from services.fetcher import get_fetcher
-
 from services.parser import get_parser_for_domain
 
 logger = logging.getLogger(__name__)

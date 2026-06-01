@@ -1,5 +1,7 @@
 import logging
+
 import newspaper
+
 from core.exceptions import ParserError
 from services.base_parser import BaseParser, EnrichedData
 

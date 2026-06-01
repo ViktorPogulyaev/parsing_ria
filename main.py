@@ -8,8 +8,8 @@ from fastapi.responses import JSONResponse
 from api.enrichment import router as enrichment_router
 from api.news import router as news_router
 from configuration.config import settings
-from core.exceptions import NotFoundError
 from configuration.logger import setup_logging
+from core.exceptions import NotFoundError
 
 setup_logging()
 logger = logging.getLogger(__name__)

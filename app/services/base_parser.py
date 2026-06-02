@@ -20,7 +20,7 @@ class EnrichedData:
     summary: str | None = None
     views_count: int | None = None
     comments_count: int | None = None
-    metadata: dict[str, Any] = field(default_factory=dict)
+    article_metadata: dict[str, Any] = field(default_factory=dict)
 
     def is_sufficient(self) -> bool:
         """True если есть полный текст."""
@@ -38,7 +38,7 @@ class EnrichedData:
             "summary": self.summary,
             "views_count": self.views_count,
             "comments_count": self.comments_count,
-            "metadata": self.metadata,
+            "article_metadata": self.article_metadata,
         }
 
 
@@ -84,5 +84,3 @@ class BaseParser(ABC):
                 }
             )
         return images
-
-

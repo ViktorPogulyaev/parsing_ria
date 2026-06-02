@@ -4,9 +4,9 @@
   Парсер для конкретного сайта (если домен известен)
 
 
-Цепочка парсеров проходит последовательно каждый парсер (в нашем случае это только RiaParser). 
+Цепочка парсеров проходит последовательно каждый парсер (в нашем случае это только RiaParser).
 Если парсер вызывает ParserError или возвращает данные, которые не являются "достаточными" (< 100 символов текста),
-то он переходит к следующему парсеру (в нашем случае выбрасывает ошибку OutOfParsers). 
+то он переходит к следующему парсеру (в нашем случае выбрасывает ошибку OutOfParsers).
 Если возникает FetchError, то нет смысла пытать другие парсеры, так как до ресурса достучаться не получается.
 
 """
@@ -47,7 +47,9 @@ class EnrichmentComposer:
         try:
             html, final_url = await fetcher.fetch(url)
         except FetchError as exc:
-            raise EnrichmentError(f"Не удалось получить доступ к ресурсу {url}: {exc}") from exc
+            raise EnrichmentError(
+                f"Не удалось получить доступ к ресурсу {url}: {exc}"
+            ) from exc
 
         chain = self._build_chain(domain)
         last_error: Exception | None = None
@@ -56,19 +58,15 @@ class EnrichmentComposer:
             try:
                 data = await parser.parse(final_url, html)
                 if data.is_sufficient():
-                    logger.info(
-                        "Парсер %r успешно обработал %s", parser.name, url
-                    )
+                    logger.info("Парсер %r успешно обработал %s", parser.name, url)
                     return data, parser.name
                 else:
                     logger.debug(
                         "Парсер %r вернул недостаточные данные для %s, пробуем следующий",
-                        parser.name, url,
+                        parser.name,
+                        url,
                     )
             except ParserError as exc:
-                logger.warning(
-                    "Парсер %r упал для %s: %s", parser.name, url, exc
-                )
+                logger.warning("Парсер %r упал для %s: %s", parser.name, url, exc)
                 last_error = exc
                 continue
-   

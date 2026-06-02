@@ -1,5 +1,4 @@
 """Enrichment trigger endpoints."""
-import uuid
 
 from fastapi import APIRouter, Depends, HTTPException, status
 
@@ -7,9 +6,12 @@ from app.api.depencies import get_news_service
 from app.broker.tasks import enrich_batch_task, enrich_news_task
 from app.core.exceptions import NotFoundError
 from app.models.news import NewsEnrichmentStatus
-from app.schemas.news_enrichment import (EnrichBatchRequest,
-                                         EnrichByCriteriaRequest,
-                                         EnrichSingleRequest, EnrichTaskResponse)
+from app.schemas.news_enrichment import (
+    EnrichBatchRequest,
+    EnrichByCriteriaRequest,
+    EnrichSingleRequest,
+    EnrichTaskResponse,
+)
 from app.services.news import NewsService
 
 router = APIRouter(prefix="/enrich", tags=["enrichment"])

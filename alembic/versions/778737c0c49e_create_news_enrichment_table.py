@@ -44,7 +44,12 @@ def upgrade() -> None:
         sa.Column("summary", sa.Text(), nullable=True),
         sa.Column("views_count", sa.Integer(), nullable=True),
         sa.Column("comments_count", sa.Integer(), nullable=True),
-        sa.Column("metadata", postgresql.JSONB(astext_type=sa.Text()), nullable=True),
+        sa.Column(
+            "article_metadata",
+            postgresql.JSONB(astext_type=sa.Text()),
+            nullable=False,
+            server_default=sa.text("'{}'::jsonb"),
+        ),
         sa.Column("search_vector", postgresql.TSVECTOR(), nullable=True),
         sa.Column(
             "created_at",

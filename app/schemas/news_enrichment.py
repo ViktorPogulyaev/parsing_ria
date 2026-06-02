@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime
 from typing import Any
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class ImageSchema(BaseModel):
@@ -35,23 +35,38 @@ class EnrichByCriteriaRequest(BaseModel):
 
 class EnrichmentSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True)
- 
+
     status: str
     enriched_at: datetime | None = None
     parser_used: str | None = None
     error_message: str | None = None
- 
+
     full_text: str | None = None
     author: str | None = None
     main_image_url: str | None = None
     images: list[ImageSchema] = Field(default_factory=list)
- 
+
     categories: list[str] = Field(default_factory=list)
     tags: list[str] = Field(default_factory=list)
     keywords: list[str] = Field(default_factory=list)
     summary: str | None = None
- 
+
     views_count: int | None = None
     comments_count: int | None = None
-    metadata: dict[str, Any] = Field(default_factory=dict)
+    article_metadata: dict[str, Any] = Field(default_factory=dict)
+
+    @field_validator("images", mode="before")
+    @classmethod
+    def images_none_to_list(cls, value: list | None) -> list:
+        return value if value is not None else []
+
+    @field_validator("categories", "tags", "keywords", mode="before")
+    @classmethod
+    def str_lists_none_to_empty(cls, value: list | None) -> list:
+        return value if value is not None else []
+
+    @field_validator("article_metadata", mode="before")
+    @classmethod
+    def metadata_none_to_dict(cls, value: dict | None) -> dict:
+        return value if value is not None else {}
  

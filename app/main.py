@@ -1,13 +1,10 @@
 import logging
-import time
 
 from fastapi import FastAPI, Request, status
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from app.api.enrichment import router as enrichment_router
 from app.api.news import router as news_router
-from app.configuration.config import settings
 from app.configuration.logger import setup_logging
 from app.core.exceptions import NotFoundError
 

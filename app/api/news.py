@@ -8,8 +8,8 @@ from app.schemas.news import NewsFilterParams, NewsListResponse, NewsResponse
 from app.services.news import NewsService
 
 router = APIRouter(prefix="/news", tags=["news"])
- 
- 
+
+
 @router.get(
     "",
     response_model=NewsListResponse,
@@ -19,13 +19,19 @@ async def list_news(
     page: int = Query(1, ge=1, description="Номер страницы"),
     size: int = Query(20, ge=1, le=100, description="Количество элементов на странице"),
     search: str | None = Query(None, description="Полнотекстовый поиск"),
-    source_domain: str | None = Query(None, description="Фильтрация по домену источника"),
+    source_domain: str | None = Query(
+        None, description="Фильтрация по домену источника"
+    ),
     category: str | None = Query(None, description="Фильтрация по категории"),
     tag: str | None = Query(None, description="Фильтрация по тегу"),
     status: str | None = Query(None, description="Фильтрация по статусу обработки"),
     author: str | None = Query(None, description="Фильтрация по автору"),
-    published_from: str | None = Query(None, description="ISO datetime фильтрация по дате публикации с"),
-    published_to: str | None = Query(None, description="ISO datetime фильтрация по дате публикации до"),
+    published_from: str | None = Query(
+        None, description="ISO datetime фильтрация по дате публикации с"
+    ),
+    published_to: str | None = Query(
+        None, description="ISO datetime фильтрация по дате публикации до"
+    ),
     service: NewsService = Depends(get_news_service),
 ) -> NewsListResponse:
     params = NewsFilterParams(
@@ -49,8 +55,8 @@ async def list_news(
         size=size,
         pages=pages,
     )
- 
- 
+
+
 @router.get(
     "/{news_id}",
     response_model=NewsResponse,

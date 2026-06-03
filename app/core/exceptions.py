@@ -22,7 +22,7 @@ class ParserError(EnrichmentPipelineError):
     """Парсер не смог извлечь данные из HTML."""
 
 
-class OutOfParsers(EnrichmentPipelineError):
+class OutOfParsersError(EnrichmentPipelineError):
     """Нет парсера для домена или все парсеры вернули ошибку/мало текста."""
 
 

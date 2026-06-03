@@ -15,7 +15,7 @@ import logging
 from urllib.parse import urlparse
 import asyncio
 
-from app.core.exceptions import EnrichmentError, FetchError, ParserError
+from app.core.exceptions import EnrichmentError, FetchError, ParserError, OutOfParsersError
 from app.models.news import News
 from app.services.base_parser import BaseParser, EnrichedData
 from app.services.fetcher import get_fetcher
@@ -73,6 +73,8 @@ class EnrichmentComposer:
                 logger.warning("Парсер %r упал для %s: %s", parser.name, url, exc)
                 last_error = exc
                 continue
+        
+        raise OutOfParsersError(f"Все парсеры провалились для {url}")
 
 
     def _post_process(self, data: EnrichedData, html: str) -> EnrichedData:

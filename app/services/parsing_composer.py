@@ -13,12 +13,14 @@
 
 import logging
 from urllib.parse import urlparse
+import asyncio
 
 from app.core.exceptions import EnrichmentError, FetchError, ParserError
 from app.models.news import News
 from app.services.base_parser import BaseParser, EnrichedData
 from app.services.fetcher import get_fetcher
 from app.services.parser import get_parser_for_domain
+from app.services.nlp import (extract_keywords, generate_summary, estimate_reading_time)
 
 logger = logging.getLogger(__name__)
 
@@ -57,6 +59,7 @@ class EnrichmentComposer:
         for parser in chain:
             try:
                 data = await parser.parse(final_url, html)
+                data = await asyncio.to_thread(self._post_process, data, html)
                 if data.is_sufficient():
                     logger.info("Парсер %r успешно обработал %s", parser.name, url)
                     return data, parser.name
@@ -70,3 +73,19 @@ class EnrichmentComposer:
                 logger.warning("Парсер %r упал для %s: %s", parser.name, url, exc)
                 last_error = exc
                 continue
+
+
+    def _post_process(self, data: EnrichedData, html: str) -> EnrichedData:
+        """Добавление NLP полей к данным новости."""
+        text = data.full_text or ""
+ 
+        if not data.keywords and text:
+            data.keywords = extract_keywords(text)
+ 
+        if not data.summary and text:
+            data.summary = generate_summary(text)
+ 
+        # Metadata enrichments
+        data.article_metadata["reading_time_minutes"] = estimate_reading_time(text)
+ 
+        return data
